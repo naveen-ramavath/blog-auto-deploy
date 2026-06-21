@@ -1,0 +1,95 @@
+================================================================================
+                    PROJECT EXPLANATION: blog-auto-deploy
+================================================================================
+
+1. WHAT IS THIS PROJECT?
+------------------------
+This project is a personal blog website featuring a fully automated 
+CI/CD (Continuous Integration and Continuous Deployment) pipeline. 
+
+Its primary purpose is to allow developers/bloggers to write blog content 
+in simple Markdown files locally, and have the website automatically build 
+and deploy itself to a live AWS EC2 cloud server as soon as changes are 
+pushed to the GitHub repository.
+
+2. HOW DOES IT WORK?
+--------------------
+When you push code or write a new blog post (in Markdown format) and push it 
+to the Git repository (specifically to the 'main' or 'hugo-stable-test' branches):
+  a) A GitHub Actions workflow is automatically triggered.
+  b) The workflow checks out the code, installs Hugo, and builds the static website.
+  c) The compiled, optimized files (HTML, CSS, JS) are securely synchronized 
+     to an AWS EC2 instance.
+  d) The Nginx web server on EC2 is reloaded to instantly serve the updated blog posts.
+
+3. TECH STACK & TOOLS USED (WHERE, WHAT, AND WHY)
+-------------------------------------------------
+
+--------------------------------------------------------------------------------
+A. FRONTEND & CONTENT GENERATION
+--------------------------------------------------------------------------------
+- Tool: Hugo (Static Site Generator)
+  * Where it is used: In development and in the GitHub Actions build pipeline.
+  * What it does: Compiles the source files (Markdown templates, config, themes) 
+    into standard HTML, CSS, and JavaScript.
+  * Why it is used: Hugo is extremely fast, generates lightweight, fast-loading 
+    pages, requires no database or backend servers to serve pages, and is 
+    extremely secure and cheap to host.
+
+- Tool: Hugo Ananke Theme
+  * Where it is used: Frontend design / styling of the blog.
+  * What it does: Provides a modern, responsive, and ready-made design/layout 
+    for the blog (homepage, posts list, contact page, etc.).
+  * Why it is used: Avoids writing custom CSS and layouts from scratch, ensuring 
+    a clean user interface immediately.
+
+- Tool: Markdown (.md files)
+  * Where it is used: Writing posts and pages in the 'content/' folder (e.g., 
+    content/posts/my-first-post.md).
+  * What it does: Provides a lightweight syntax to write formatted text without 
+    writing raw HTML.
+  * Why it is used: It is standard for modern blogs, allowing writers to focus 
+    on writing content rather than styling code.
+
+--------------------------------------------------------------------------------
+B. HOSTING & SERVING (BACKEND/INFRASTRUCTURE)
+--------------------------------------------------------------------------------
+- Tool: AWS EC2 (Elastic Compute Cloud)
+  * Where it is used: Hosting / Server infrastructure.
+  * What it does: Acts as the virtual server running in the cloud that hosts 
+    the blog's static files and runs the web server.
+  * Why it is used: Offers reliability, scalability, full control over the 
+    operating system, and has a generous free tier for running a small web server.
+
+- Tool: Nginx
+  * Where it is used: Web Server software running on the AWS EC2 instance.
+  * What it does: Listens for incoming HTTP requests at the base URL (http://13.62.70.6/) 
+    and serves the correct static HTML files from the deployment folder to visitors.
+  * Why it is used: It is one of the fastest, most reliable, and lightweight 
+    web servers available, highly optimized for serving static content.
+
+--------------------------------------------------------------------------------
+C. DEVOPS & CI/CD PIPELINE (AUTOMATION)
+--------------------------------------------------------------------------------
+- Tool: GitHub Actions
+  * Where it is used: Automated build and deployment pipeline (.github/workflows/deploy.yml).
+  * What it does: Automates the entire build and deploy process on every push.
+  * Why it is used: Eliminates manual deployment steps (such as building files 
+    locally, SSHing into EC2, and manually copying files).
+
+- Tool: SSH (Secure Shell) & Webfactory SSH Agent
+  * Where it is used: Securing connections between GitHub Actions and AWS EC2.
+  * What it does: Authenticates the GitHub runner using a private SSH key secret 
+    (`SSH_PRIVATE_KEY`) to safely communicate with the AWS EC2 instance.
+  * Why it is used: Essential for secure, encrypted, and password-less 
+    automated authentication.
+
+- Tool: Rsync
+  * Where it is used: File Transfer step in GitHub Actions.
+  * What it does: Syncs the generated './public/' build folder containing the static 
+    files to the target directory on the EC2 server (`DEPLOY_PATH`) while deleting 
+    old files that are no longer present.
+  * Why it is used: Highly efficient as it only copies modified/new files, saving 
+    bandwidth and deployment time.
+
+================================================================================

@@ -2,3 +2,17 @@ baseURL = "http://13.62.70.6/"
 languageCode = 'en-us'
 title = 'My Blog'
 theme = "ananke"
+
+[params.giscus]
+  enable = true
+  repo = "naveen-ramavath/blog-auto-deploy"
+  repoId = "R_kgDOSDqUrQ"       # Fill this with your GitHub repository ID
+  category = "General"
+  categoryId = "DIC_kwDOSDqUrc4C_mCA"   # Fill this with your GitHub discussion category ID
+  mapping = "pathname"
+  strict = "0"
+  reactionsEnabled = "1"
+  emitMetadata = "0"
+  inputPosition = "bottom"
+  theme = "light"
+  lang = "en"
